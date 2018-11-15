@@ -25,7 +25,7 @@
 #import "ZFPortraitControlView.h"
 #import "UIView+ZFFrame.h"
 #import "ZFUtilities.h"
-#import "ZFPlayer.h"
+#import <ZFPlayer/ZFPlayer.h>
 
 @interface ZFPortraitControlView () <ZFSliderViewDelegate>
 /// 底部工具栏
@@ -44,6 +44,8 @@
 @property (nonatomic, strong) UILabel *totalTimeLabel;
 /// 全屏按钮
 @property (nonatomic, strong) UIButton *fullScreenBtn;
+/// 返回按钮
+@property (nonatomic, strong) UIButton *backBtn;
 
 @property (nonatomic, assign) BOOL isShow;
 
@@ -58,6 +60,7 @@
         [self addSubview:self.bottomToolView];
         [self addSubview:self.playOrPauseBtn];
         [self.topToolView addSubview:self.titleLabel];
+        [self.topToolView addSubview:self.backBtn];
         [self.bottomToolView addSubview:self.currentTimeLabel];
         [self.bottomToolView addSubview:self.slider];
         [self.bottomToolView addSubview:self.totalTimeLabel];
@@ -73,6 +76,7 @@
 }
 
 - (void)makeSubViewsAction {
+    [self.backBtn addTarget:self action:@selector(backBtnClickAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.playOrPauseBtn addTarget:self action:@selector(playPauseButtonClickAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.fullScreenBtn addTarget:self action:@selector(fullScreenButtonClickAction:) forControlEvents:UIControlEventTouchUpInside];
 }
@@ -129,6 +133,13 @@
 
 #pragma mark - action
 
+- (void)backBtnClickAction:(UIButton *)sender {
+    [self.player stop];
+    if (_backBtnClickCallback) {
+        _backBtnClickCallback();
+    }
+}
+
 - (void)playPauseButtonClickAction:(UIButton *)sender {
     [self playOrPause];
 }
@@ -165,6 +176,12 @@
     min_w = min_view_w;
     min_h = 40;
     self.topToolView.frame = CGRectMake(min_x, min_y, min_w, min_h);
+    
+    min_x = (iPhoneX && self.player.orientationObserver.fullScreenMode == ZFFullScreenModeLandscape) ? 44: 15;
+    min_y = (iPhoneX && self.player.orientationObserver.fullScreenMode == ZFFullScreenModeLandscape) ? 15: (iPhoneX ? 40 : 20);
+    min_w = 40;
+    min_h = 40;
+    self.backBtn.frame = CGRectMake(min_x, min_y, min_w, min_h);
     
     min_x = 15;
     min_y = 5;
@@ -251,8 +268,8 @@
     self.isShow                      = NO;
     self.topToolView.y               = -self.topToolView.height;
     self.bottomToolView.y            = self.height;
-    self.playOrPauseBtn.alpha        = 0;
     self.player.statusBarHidden      = NO;
+    self.playOrPauseBtn.alpha        = 0;
     self.topToolView.alpha           = 0;
     self.bottomToolView.alpha        = 0;
 }
@@ -316,6 +333,14 @@
     return _topToolView;
 }
 
+- (UIButton *)backBtn {
+    if (!_backBtn) {
+        _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_backBtn setImage:[UIImage imageNamed:@"navigator_btn_back"]  forState:UIControlStateNormal];
+    }
+    return _backBtn;
+}
+
 - (UILabel *)titleLabel {
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc] init];
@@ -337,8 +362,8 @@
 - (UIButton *)playOrPauseBtn {
     if (!_playOrPauseBtn) {
         _playOrPauseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_playOrPauseBtn setImage:ZFPlayer_Image(@"new_allPlay_44x44_") forState:UIControlStateNormal];
-        [_playOrPauseBtn setImage:ZFPlayer_Image(@"new_allPause_44x44_") forState:UIControlStateSelected];
+        [_playOrPauseBtn setImage:[UIImage imageNamed:@"vodeo_icon_16px_play"] forState:UIControlStateNormal];
+        [_playOrPauseBtn setImage:[UIImage imageNamed:@"vodeo_icon_16px_stop"] forState:UIControlStateSelected];
     }
     return _playOrPauseBtn;
 }
@@ -359,7 +384,7 @@
         _slider.delegate = self;
         _slider.maximumTrackTintColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.8];
         _slider.bufferTrackTintColor  = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.5];
-        _slider.minimumTrackTintColor = [UIColor whiteColor];
+        _slider.minimumTrackTintColor = [UIColor redColor];
         [_slider setThumbImage:ZFPlayer_Image(@"ZFPlayer_slider") forState:UIControlStateNormal];
         _slider.sliderHeight = 2;
     }
@@ -379,7 +404,7 @@
 - (UIButton *)fullScreenBtn {
     if (!_fullScreenBtn) {
         _fullScreenBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_fullScreenBtn setImage:ZFPlayer_Image(@"ZFPlayer_fullscreen") forState:UIControlStateNormal];
+        [_fullScreenBtn setImage:[UIImage imageNamed:@"vodeo_icon_16px_big"] forState:UIControlStateNormal];
     }
     return _fullScreenBtn;
 }

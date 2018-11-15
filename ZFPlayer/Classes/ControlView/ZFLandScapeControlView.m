@@ -25,7 +25,7 @@
 #import "ZFLandScapeControlView.h"
 #import "UIView+ZFFrame.h"
 #import "ZFUtilities.h"
-#import "ZFPlayer.h"
+#import <ZFPlayer/ZFPlayer.h>
 
 @interface ZFLandScapeControlView () <ZFSliderViewDelegate>
 /// 顶部工具栏
@@ -68,7 +68,6 @@
         
         [self.bottomToolView addSubview:self.slider];
         [self.bottomToolView addSubview:self.totalTimeLabel];
-        [self addSubview:self.lockBtn];
         
         // 设置子控件的响应事件
         [self makeSubViewsAction];
@@ -150,6 +149,19 @@
     min_h = 40;
     self.lockBtn.frame = CGRectMake(min_x, min_y, min_w, min_h);
     self.lockBtn.centerY = self.centerY;
+    
+    if (!self.isShow) {
+        self.topToolView.y = -self.topToolView.height;
+        self.bottomToolView.y = self.height;
+    } else {
+        if (self.player.isLockedScreen) {
+            self.topToolView.y = -self.topToolView.height;
+            self.bottomToolView.y = self.height;
+        } else {
+            self.topToolView.y = 0;
+            self.bottomToolView.y = self.height - self.bottomToolView.height;
+        }
+    }
 }
 
 - (void)makeSubViewsAction {
@@ -226,6 +238,7 @@
     self.titleLabel.text             = @"";
     self.topToolView.alpha           = 1;
     self.bottomToolView.alpha        = 1;
+    self.isShow                      = NO;
 }
 
 - (void)showControlView {
@@ -254,10 +267,10 @@
     self.topToolView.y               = -self.topToolView.height;
     self.bottomToolView.y            = self.height;
     self.lockBtn.left                = iPhoneX ? -82: -47;
+    self.player.statusBarHidden      = YES;
     self.topToolView.alpha           = 0;
     self.bottomToolView.alpha        = 0;
     self.lockBtn.alpha               = 0;
-    self.player.statusBarHidden      = YES;
 }
 
 - (BOOL)shouldResponseGestureWithPoint:(CGPoint)point withGestureType:(ZFPlayerGestureType)type touch:(nonnull UITouch *)touch {
@@ -317,9 +330,6 @@
     self.lockBtn.selected = NO;
     if (self.player.orientationObserver.supportInterfaceOrientation & ZFInterfaceOrientationMaskPortrait) {
         [self.player enterFullScreen:NO animated:YES];
-    }
-    if (self.backBtnClickCallback) {
-        self.backBtnClickCallback();
     }
 }
 
