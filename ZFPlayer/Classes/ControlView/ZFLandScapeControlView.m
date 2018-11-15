@@ -68,7 +68,6 @@
         
         [self.bottomToolView addSubview:self.slider];
         [self.bottomToolView addSubview:self.totalTimeLabel];
-        [self addSubview:self.lockBtn];
         
         // 设置子控件的响应事件
         [self makeSubViewsAction];
@@ -331,9 +330,6 @@
     self.lockBtn.selected = NO;
     if (self.player.orientationObserver.supportInterfaceOrientation & ZFInterfaceOrientationMaskPortrait) {
         [self.player enterFullScreen:NO animated:YES];
-    }
-    if (self.backBtnClickCallback) {
-        self.backBtnClickCallback();
     }
 }
 
