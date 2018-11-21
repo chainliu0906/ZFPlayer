@@ -47,6 +47,9 @@
 /// 锁定屏幕按钮
 @property (nonatomic, strong) UIButton *lockBtn;
 
+/// 锁定屏幕按钮
+@property (nonatomic, strong) UIButton *portraitBtn;
+
 @property (nonatomic, assign) BOOL isShow;
 
 @end
@@ -68,6 +71,7 @@
         
         [self.bottomToolView addSubview:self.slider];
         [self.bottomToolView addSubview:self.totalTimeLabel];
+        [self.bottomToolView addSubview:self.portraitBtn];
         
         // 设置子控件的响应事件
         [self makeSubViewsAction];
@@ -96,7 +100,7 @@
     min_h = iPhoneX ? 110 : 80;
     self.topToolView.frame = CGRectMake(min_x, min_y, min_w, min_h);
     
-    min_x = (iPhoneX && self.player.orientationObserver.fullScreenMode == ZFFullScreenModeLandscape) ? 44: 15;
+    min_x = 20;
     min_y = (iPhoneX && self.player.orientationObserver.fullScreenMode == ZFFullScreenModeLandscape) ? 15: (iPhoneX ? 40 : 20);
     min_w = 40;
     min_h = 40;
@@ -116,7 +120,7 @@
     min_w = min_view_w;
     self.bottomToolView.frame = CGRectMake(min_x, min_y, min_w, min_h);
     
-    min_x = (iPhoneX && self.player.orientationObserver.fullScreenMode == ZFFullScreenModeLandscape) ? 44: 15;
+    min_x = 20;
     min_y = 32;
     min_w = 30;
     min_h = 30;
@@ -135,6 +139,10 @@
     min_h = 30;
     self.totalTimeLabel.frame = CGRectMake(min_x, min_y, min_w, min_h);
     self.totalTimeLabel.centerY = self.playOrPauseBtn.centerY;
+    
+    
+    self.portraitBtn.frame = CGRectMake(min_x + min_w + 10 , min_y, 24, 24);
+    self.portraitBtn.centerY = self.playOrPauseBtn.centerY;
     
     min_x = self.currentTimeLabel.right + 4;
     min_y = 0;
@@ -166,6 +174,7 @@
 
 - (void)makeSubViewsAction {
     [self.backBtn addTarget:self action:@selector(backBtnClickAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.portraitBtn addTarget:self action:@selector(backBtnClickAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.playOrPauseBtn addTarget:self action:@selector(playPauseButtonClickAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.lockBtn addTarget:self action:@selector(lockButtonClickAction:) forControlEvents:UIControlEventTouchUpInside];
 }
@@ -366,7 +375,7 @@
 - (UIButton *)backBtn {
     if (!_backBtn) {
         _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_backBtn setImage:ZFPlayer_Image(@"ZFPlayer_back_full") forState:UIControlStateNormal];
+        [_backBtn setImage:[UIImage imageNamed:@"navigator_btn_back"] forState:UIControlStateNormal];
     }
     return _backBtn;
 }
@@ -438,6 +447,14 @@
         [_lockBtn setImage:ZFPlayer_Image(@"ZFPlayer_lock-nor") forState:UIControlStateSelected];
     }
     return _lockBtn;
+}
+
+- (UIButton *)portraitBtn {
+    if (!_portraitBtn) {
+        _portraitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_portraitBtn setImage:[UIImage imageNamed:@"vodeo_icon_16px_small"] forState:UIControlStateNormal];
+    }
+    return _portraitBtn;
 }
 
 @end
