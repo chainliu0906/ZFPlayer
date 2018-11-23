@@ -46,6 +46,8 @@
 @property (nonatomic, strong) UIButton *fullScreenBtn;
 /// 返回按钮
 @property (nonatomic, strong) UIButton *backBtn;
+/// 返回按钮
+@property (nonatomic, strong) UIView *backArea;
 
 @property (nonatomic, assign) BOOL isShow;
 
@@ -61,6 +63,7 @@
         [self addSubview:self.playOrPauseBtn];
         [self.topToolView addSubview:self.titleLabel];
         [self.topToolView addSubview:self.backBtn];
+        [self.topToolView addSubview:self.backArea];
         [self.bottomToolView addSubview:self.currentTimeLabel];
         [self.bottomToolView addSubview:self.slider];
         [self.bottomToolView addSubview:self.totalTimeLabel];
@@ -174,14 +177,20 @@
     min_x = 0;
     min_y = 0;
     min_w = min_view_w;
-    min_h = 40;
+    min_h = 80;
     self.topToolView.frame = CGRectMake(min_x, min_y, min_w, min_h);
     
     min_x = min_margin;
-    min_y = (iPhoneX && self.player.orientationObserver.fullScreenMode == ZFFullScreenModeLandscape) ? 15: (iPhoneX ? 40 : 20);
+    min_y = 15;
     min_w = 40;
     min_h = 40;
     self.backBtn.frame = CGRectMake(min_x, min_y, min_w, min_h);
+    
+    min_x = min_margin;
+    min_y = 15;
+    min_w = 100;
+    min_h = 80;
+    self.backArea.frame = CGRectMake(min_x, min_y, min_w, min_h);
     
     min_x = 15;
     min_y = 5;
@@ -327,8 +336,6 @@
 - (UIView *)topToolView {
     if (!_topToolView) {
         _topToolView = [[UIView alloc] init];
-        UIImage *image = ZFPlayer_Image(@"ZFPlayer_top_shadow");
-        _topToolView.layer.contents = (id)image.CGImage;
     }
     return _topToolView;
 }
@@ -341,6 +348,16 @@
     return _backBtn;
 }
 
+- (UIView *)backArea {
+    if (!_backArea) {
+        _backArea = [[UIView alloc] init];
+        _backArea.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backBtnClickAction:)];
+        [_backArea addGestureRecognizer:tap];
+    }
+    return _backArea;
+}
+    
 - (UILabel *)titleLabel {
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc] init];
@@ -353,8 +370,6 @@
 - (UIView *)bottomToolView {
     if (!_bottomToolView) {
         _bottomToolView = [[UIView alloc] init];
-        UIImage *image = ZFPlayer_Image(@"ZFPlayer_bottom_shadow");
-        _bottomToolView.layer.contents = (id)image.CGImage;
     }
     return _bottomToolView;
 }
