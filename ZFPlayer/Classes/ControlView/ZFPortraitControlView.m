@@ -62,7 +62,7 @@
         [self addSubview:self.bottomToolView];
         [self addSubview:self.playOrPauseBtn];
         [self.topToolView addSubview:self.titleLabel];
-        [self.topToolView addSubview:self.backBtn];
+        [self addSubview:self.backBtn];
         [self.topToolView addSubview:self.backArea];
         [self.bottomToolView addSubview:self.currentTimeLabel];
         [self.bottomToolView addSubview:self.slider];
