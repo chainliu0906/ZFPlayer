@@ -175,7 +175,7 @@ static const CGFloat ZFPlayerControlViewAutoFadeOutTimeInterval = 0.25f;
     [self.fastView addSubview:self.fastImageView];
     [self.fastView addSubview:self.fastTimeLabel];
     [self.fastView addSubview:self.fastProgressView];
-//    [self addSubview:self.bottomPgrogress];
+    [self addSubview:self.bottomPgrogress];
     [self addSubview:self.volumeBrightnessView];
 }
 
