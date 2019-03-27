@@ -57,6 +57,7 @@
 @property (nonatomic, assign) BOOL fullScreenOnly;
 /// 返回按钮点击回调
 @property (nonatomic, copy) void(^backBtnClickCallback)(void);
+@property (nonatomic, copy) void(^controlViewStateChanged)(BOOL);
 
 /// 设置标题、封面、全屏模式
 - (void)showTitle:(NSString *)title coverURLString:(NSString *)coverUrl fullScreenMode:(ZFFullScreenMode)fullScreenMode;

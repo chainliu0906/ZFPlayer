@@ -557,6 +557,7 @@ static const CGFloat ZFPlayerControlViewAutoFadeOutTimeInterval = 0.25f;
             @strongify(self)
             [self autoFadeOutControlView];
         };
+        _portraitControlView.controlViewStateChanged = self.controlViewStateChanged;
     }
     return _portraitControlView;
 }
@@ -692,4 +693,8 @@ static const CGFloat ZFPlayerControlViewAutoFadeOutTimeInterval = 0.25f;
     self.portraitControlView.backBtnClickCallback = _backBtnClickCallback;
 }
 
+- (void)setControlViewStateChanged:(void (^)(void))controlViewStateChanged {
+    _controlViewStateChanged = [controlViewStateChanged copy];
+    self.portraitControlView.controlViewStateChanged = _controlViewStateChanged;
+}
 @end

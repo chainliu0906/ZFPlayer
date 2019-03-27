@@ -269,6 +269,9 @@
     self.bottomToolView.y            = self.height - self.bottomToolView.height;
     self.playOrPauseBtn.alpha        = 1;
     self.player.statusBarHidden      = NO;
+    if (_controlViewStateChanged != nil) {
+        _controlViewStateChanged(YES);
+    }
 }
 
 - (void)hideControlView {
@@ -279,6 +282,9 @@
     self.playOrPauseBtn.alpha        = 0;
     self.topToolView.alpha           = 0;
     self.bottomToolView.alpha        = 0;
+    if (_controlViewStateChanged != nil) {
+        _controlViewStateChanged(NO);
+    }
 }
 
 - (BOOL)shouldResponseGestureWithPoint:(CGPoint)point withGestureType:(ZFPlayerGestureType)type touch:(nonnull UITouch *)touch {
